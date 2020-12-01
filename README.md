@@ -18,6 +18,10 @@ Modèles 3D à imprimer du bioréacteur Spirulerie et du boitier de carte standa
 
 Guide PDF rapide de la culture de spiruline et d'utilisation du bioréacteur Spirulerie.
 
+/LibSpirulerie
+
+Bibliothèque Arduino (PlatformIO) pour simplifier la programmation de la carte Spirulerie. Version 0.0.1 Work in progress
+
 ------------------------------------------------------------
 
 /MK3_Firmware
@@ -33,3 +37,7 @@ You need to install file systme image to correctly render fonts.
 /Guide Bioréacteur Spirulerie
 
 (FR) Quick guide about spirulina cultivation and the use of La Spirulerie's bioreactor.
+
+/LibSpirulerie
+
+Arduino (PlatformIO) library to make programming the board easier. Version 0.0.1 Work in progress
