@@ -2,7 +2,7 @@
 	"name": "La Spirulerie",
 	"keywords": "La Spirulerie",
 	"description": "helpers to program La Spirulerie's board",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "repository":
     {
         "type": "git",
@@ -19,6 +19,7 @@
     "dependencies":
     {
         "paulstoffregen/OneWire": "^2.3.5",
-        "milesburton/DallasTemperature": "^3.9.1"
+        "milesburton/DallasTemperature": "^3.9.1",
+        "paulstoffregen/Time": "^1.6"
     }
 }
