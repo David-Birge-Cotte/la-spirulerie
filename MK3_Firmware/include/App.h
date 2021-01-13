@@ -2,6 +2,7 @@
 #define APP_H
 
 #include <Arduino.h>
+#include <Spirulerie.h>
 
 #include "DataTypes.h"
 #include "IODefinitions.h"
@@ -41,7 +42,7 @@
 
 // Defines
 #define	MAX_PERCENTAGE_LIGHT	35	// do not go above this value or the LED will fail (burn, melt plastic etc...)
-#define	MAX_PERCENTAGE_HEATER	65	// So it doesn't draw too much current
+#define	MAX_PERCENTAGE_HEATER	75	// So it doesn't draw too much current
 #define	SECONDS_TO_SCREENSAVER	45	// only if screensaver is enabled in settings
 
 // Main container class for program
@@ -58,6 +59,7 @@ class Application
 
 		// RTOS Queues
 		QueueHandle_t	temperatureQueue;
+		QueueHandle_t	TSensorActiveQueue;
 		QueueHandle_t	PWMActionsQueue;
 		QueueHandle_t	inputQueue;
 		QueueHandle_t	audioQueue;
@@ -73,7 +75,7 @@ class Application
 		bool			lightNominal = true;
 		bool			heatNominal = true;
 		bool			pumpNominal = true;
-		bool			canGoToScreenSaver = true;
+		bool			isOnMainMenu = true;
 
 		bool				modeNeedsRefresh = true;
 		ModeParameters		parameters;

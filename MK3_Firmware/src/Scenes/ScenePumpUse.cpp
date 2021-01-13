@@ -121,7 +121,6 @@ void	ScenePumpUse::Initialize()
 	Serial.printf("<== scene ScenePumpUse ==>\n");
 	Scene::Initialize();
 
-	//app->canGoToScreenSaver = false;
 	app->pumpNominal = false; // Tell the app NOT to update the pump anymore
 	app->SendAction(PWMC_IO_D, 0, 500); // Tell the pump to stop
 
@@ -178,7 +177,6 @@ void	ScenePumpUse::Update()
 		break;
 	case EXIT:
 		app->pumpNominal = true; // Give back control of the pump to the App
-		//app->canGoToScreenSaver = true;
 		app->LoadScene(new SceneMainMenu());
 		break;
 	default:

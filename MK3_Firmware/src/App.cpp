@@ -16,6 +16,7 @@ void Application::Init()
 {
 	// Init RTOS queues
 	temperatureQueue = xQueueCreate(1, sizeof(float));
+	TSensorActiveQueue = xQueueCreate(1, sizeof(bool));
 	PWMActionsQueue = xQueueCreate(20, sizeof(ActuatorPWMAction));
 	inputQueue = xQueueCreate(5, sizeof(BtnEvent));
 	audioQueue = xQueueCreate(5, sizeof(Melodies));
@@ -60,7 +61,9 @@ void Application::Init()
 void Application::Update()
 {
 	// ******** App Functions ********
-	//WifiSystem.Update();
+
+	// authorize temperature reading only on main menu
+	xQueueOverwrite(TSensorActiveQueue, &isOnMainMenu);
 
 	if (modeNeedsRefresh)
 	{
@@ -83,7 +86,7 @@ void Application::Update()
 	if (pumpNominal)
 		Pump();
 
-	if (canGoToScreenSaver && DataSaveLoad::ReadCanScreenSave() && !m_is_in_screensaver
+	if (isOnMainMenu && DataSaveLoad::ReadCanScreenSave() && !m_is_in_screensaver
 			&& (millis() - m_last_btn_press_time) / 1000 > SECONDS_TO_SCREENSAVER)
 		{
 			digitalWrite(PIN_LCDLIGHT, LOW);

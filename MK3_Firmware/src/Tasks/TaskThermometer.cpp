@@ -17,6 +17,7 @@ TaskHandle_t	InitThermometer()
 void		ThermometerTask(void *parameter)
 {
 	QueueHandle_t	temperatureQueue = Application::singleton->temperatureQueue;
+	QueueHandle_t	TSensorActiveQueue = Application::singleton->TSensorActiveQueue;
 	Thermometer		thermometer;
 
 	// we should fill the queue with at least an error value. Not the undefined default
@@ -31,24 +32,29 @@ void		ThermometerTask(void *parameter)
 		delay(400);
 
 	// Wait a bit between initialization and first reading
-	delay(1000);
+	delay(5000);
 
 	// Read termperature and send it in to the RTOS queue
 	for (;;)
 	{
-		float tempC = -1;
+		float	tempC = -1;
+		bool	canCheckTemperature = false;
 
-		// Check Temperature
-		tempC = thermometer.GetTemperature();
-		if (tempC == -1)
-			thermometer.StartDevice();
+		// Check if authorized to get temperature (because its freezes for a few milliseconds)
+		xQueuePeek(TSensorActiveQueue, &canCheckTemperature, 10);
+		if (canCheckTemperature)
+		{
+			// Check Temperature
+			tempC = thermometer.GetTemperature();
+			if (tempC == -1)
+				thermometer.StartDevice();
 
-		if (tempC < -1)
-			tempC = -1; // sometime gets -127 for some reason
+			if (tempC < -1)
+				tempC = -1; // sometime gets -127 for some reason
 
-		// Send temperature to Queue
-		xQueueOverwrite(temperatureQueue, &tempC);
-
+			// Send temperature to Queue
+			xQueueOverwrite(temperatureQueue, &tempC);
+		}
 		if (tempC != -1)
 			delay(READING_DELAY);
 		else

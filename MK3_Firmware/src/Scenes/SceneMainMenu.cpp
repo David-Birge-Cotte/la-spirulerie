@@ -8,7 +8,7 @@ void SceneMainMenu::Initialize()
 	Serial.printf("<== scene Main Menu ==>\n");
 	Scene::Initialize();
 
-	app->canGoToScreenSaver = true;
+	app->isOnMainMenu = true;
 	app->Graphics.LoadFont("Comfortaa_26", SPIRULERIE_LIGHT, SPIRULERIE_GREEN/*SPIRULERIE_GREY*/);
 	app->PlayMelody(Melodies::VALID);
 }
@@ -54,7 +54,7 @@ void SceneMainMenu::OnButtonClic(BTN btn)
 	case BTN::MIDDLE:
 		break;
 	case BTN::RIGHT:
-		app->canGoToScreenSaver = false;
+		app->isOnMainMenu = false;
 		app->LoadScene(new SceneTopMenu());
 		break;
 	default:

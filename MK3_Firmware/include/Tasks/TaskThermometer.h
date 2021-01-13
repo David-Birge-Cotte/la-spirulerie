@@ -2,12 +2,11 @@
 #define THERMOMETER_H
 
 #include <Arduino.h>
-#include <OneWire.h>
-#include <DallasTemperature.h>
+#include <Spirulerie.h>
 
 #include "App.h"
 
-#define READING_DELAY	10000 //30000
+#define READING_DELAY	3000 //30000
 
 // Global Variables
 class Thermometer
@@ -22,12 +21,10 @@ class Thermometer
 		Thermometer();
 		bool				StartDevice();
 		float				GetTemperature();
-
 };
 
 // Functions
 TaskHandle_t	InitThermometer(); // entry point
-void			ThermometerTask(void *parameter);	// RTOS task loop
-
+void			ThermometerTask(void *parameter); // RTOS task loop
 
 #endif
