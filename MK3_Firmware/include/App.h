@@ -5,7 +5,6 @@
 #include <Spirulerie.h>
 
 #include "DataTypes.h"
-#include "IODefinitions.h"
 #include "SPIFFS.h"
 #include "TimeSystem.h"
 #include "TextContent.h"

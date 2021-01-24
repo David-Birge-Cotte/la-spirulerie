@@ -43,13 +43,13 @@ void ActuatorTask(void *parameter)
 		xQueueReceive(actionQueue, &action, portMAX_DELAY);
 
 		// direct actions to specific tasks driving PWM channels
-		if (action.channel == PWMC_IO_A)
+		if (action.channel == PWMC_A)
 			xQueueSend(IOAQueue, &action, portMAX_DELAY);
-		if (action.channel == PWMC_IO_B)
+		if (action.channel == PWMC_B)
 			xQueueSend(IOBQueue, &action, portMAX_DELAY);
-		if (action.channel == PWMC_IO_C)
+		if (action.channel == PWMC_C)
 			xQueueSend(IOCQueue, &action, portMAX_DELAY);
-		if (action.channel == PWMC_IO_D)
+		if (action.channel == PWMC_D)
 			xQueueSend(IODQueue, &action, portMAX_DELAY);
 		//if (action.channel == PWMC_BRIGHTNESS)
 		//	xQueueSend(BrightnessQueue, &action, portMAX_DELAY);
@@ -58,26 +58,26 @@ void ActuatorTask(void *parameter)
 
 void	Task_IO_A(void *parameter)
 {
-	InitPWM(PWMC_IO_A, PWM_FREQ_IO, PIN_12V_A);
-	ChannelTaskFunc(PWMC_IO_A, (QueueHandle_t)parameter);
+	InitPWM(PWMC_A, PWM_FREQ_IO, PORT_A);
+	ChannelTaskFunc(PWMC_A, (QueueHandle_t)parameter);
 }
 
 void	Task_IO_B(void *parameter)
 {
-	InitPWM(PWMC_IO_B, PWM_FREQ_IO, PIN_12V_B);
-	ChannelTaskFunc(PWMC_IO_B, (QueueHandle_t)parameter);
+	InitPWM(PWMC_B, PWM_FREQ_IO, PORT_B);
+	ChannelTaskFunc(PWMC_B, (QueueHandle_t)parameter);
 }
 
 void	Task_IO_C(void *parameter)
 {
-	InitPWM(PWMC_IO_C, PWM_FREQ_IO, PIN_12V_C);
-	ChannelTaskFunc(PWMC_IO_C, (QueueHandle_t)parameter);
+	InitPWM(PWMC_C, PWM_FREQ_IO, PORT_C);
+	ChannelTaskFunc(PWMC_C, (QueueHandle_t)parameter);
 }
 
 void	Task_IO_D(void *parameter)
 {
-	InitPWM(PWMC_IO_D, PWM_FREQ_IO, PIN_12V_D);
-	ChannelTaskFunc(PWMC_IO_D, (QueueHandle_t)parameter);
+	InitPWM(PWMC_D, PWM_FREQ_IO, PORT_D);
+	ChannelTaskFunc(PWMC_D, (QueueHandle_t)parameter);
 }
 
 /*void	Task_Brightness(void *parameter)

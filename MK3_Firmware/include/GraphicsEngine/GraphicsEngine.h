@@ -2,7 +2,6 @@
 #define GRAPHICS_ENGINE_H
 
 #include <TFT_eSPI.h>
-#include "IODefinitions.h"
 #include "SpriteArrays.h"
 
 #define WIN_WIDTH	160

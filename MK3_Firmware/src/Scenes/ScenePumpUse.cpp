@@ -122,7 +122,7 @@ void	ScenePumpUse::Initialize()
 	Scene::Initialize();
 
 	app->pumpNominal = false; // Tell the app NOT to update the pump anymore
-	app->SendAction(PWMC_IO_D, 0, 500); // Tell the pump to stop
+	app->SendAction(PWMC_D, 0, 500); // Tell the pump to stop
 
 	// clear screen
 	app->Graphics.Screen.fillSprite(SPIRULERIE_LIGHT);
@@ -173,7 +173,7 @@ void	ScenePumpUse::Update()
 		PumpUsageUpdate(m_pump_mode);
 		break;
 	case STOP:
-		app->SendAction(PWMC_IO_D, 0, 500);
+		app->SendAction(PWMC_D, 0, 500);
 		break;
 	case EXIT:
 		app->pumpNominal = true; // Give back control of the pump to the App

@@ -214,23 +214,23 @@ void Application::Heating()
 	if (temperature == -1)
 	{
 		// Do not turn on the heating if the thermometer is not working
-		SendAction(PWMC_IO_C, 0, 1000);
+		SendAction(PWMC_C, 0, 1000);
 		return;
 	}
 
 	if (IsDay())
 	{
 		if (temperature < parameters.temperature_day)
-			SendAction(PWMC_IO_C, MAX_PERCENTAGE_HEATER, 1000);
+			SendAction(PWMC_C, MAX_PERCENTAGE_HEATER, 1000);
 		else
-			SendAction(PWMC_IO_C, 0, 1000);
+			SendAction(PWMC_C, 0, 1000);
 	}
 	else
 	{
 		if (temperature < parameters.temperature_night)
-			SendAction(PWMC_IO_C, MAX_PERCENTAGE_HEATER, 0);
+			SendAction(PWMC_C, MAX_PERCENTAGE_HEATER, 0);
 		else
-			SendAction(PWMC_IO_C, 0, 1000);
+			SendAction(PWMC_C, 0, 1000);
 	}
 }
 
@@ -309,8 +309,8 @@ void	Application::ChangeLight(uint8_t percentage, uint32_t fade_time)
 
 	if (m_current_light_level != percentage)
 	{
-		SendAction(PWMC_IO_A, percentage, fade_time);	// Warm White LED
-		SendAction(PWMC_IO_B, percentage * 0.7f, fade_time); // Red LED (heats more -> decrease pwm)
+		SendAction(PWMC_A, percentage, fade_time);	// Warm White LED
+		SendAction(PWMC_B, percentage * 0.7f, fade_time); // Red LED (heats more -> decrease pwm)
 	}
 	m_current_light_level = percentage;
 }
@@ -322,7 +322,7 @@ void	Application::ChangePump(uint8_t percentage, uint32_t fade_time)
 
 	if (m_current_pump_level != percentage)
 	{
-		SendAction(PWMC_IO_D, percentage, fade_time);
+		SendAction(PWMC_D, percentage, fade_time);
 	}
 	m_current_pump_level = percentage;
 }
