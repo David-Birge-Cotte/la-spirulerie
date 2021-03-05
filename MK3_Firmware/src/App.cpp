@@ -9,7 +9,7 @@ Application::Application()
 	singleton = this;
 
 	m_mode_normal = ModeParameters();
-	m_mode_hibernation = ModeParameters(10, 21, 7, 22, 20, 10, 45);
+	m_mode_hibernation = ModeParameters(10, 5, 21, 7, 22, 20, 10, 45);
 }
 
 void Application::Init()
@@ -74,7 +74,7 @@ void Application::Update()
 			parameters = m_mode_normal;
 		else if (mode == 2)
 			parameters = DataSaveLoad::ReadCustomMode();
-		Serial.printf("NEW MODE luminosity: %d\n", parameters.light_max);
+		Serial.printf("NEW MODE luminosity: %d\n", parameters.light_max_A);
 		modeNeedsRefresh = false;
 	}
 
@@ -169,26 +169,39 @@ void	Application::LoadScene(Scene *scene)
 
 void Application::Lighting()
 {
-	uint8_t light_value = 0;
+	uint8_t light_value_A = 0;
+	uint8_t	light_value_B = 0;
 	tmElements_t current_time = TimeSystem::GetTime();
 
 	if (current_time.Hour > parameters.hour_dawn
 		&& current_time.Hour < parameters.hour_dusk)
 	{
 		// TODO could be refactored more elegantly and with a smoother gradient
-		light_value = parameters.light_max;
+		light_value_A = parameters.light_max_A;
 		if (current_time.Hour - parameters.hour_dawn == 0)
-			light_value = parameters.light_max / 3;
+			light_value_A = parameters.light_max_A / 3;
 		else if (current_time.Hour - parameters.hour_dusk == 1)
-			light_value = parameters.light_max / 2;
+			light_value_A = parameters.light_max_A / 2;
 
 		if (parameters.hour_dawn - current_time.Hour == 0)
-			light_value = parameters.light_max / 3;
+			light_value_A = parameters.light_max_A / 3;
 		else if (parameters.hour_dusk - current_time.Hour == 1)
-			light_value = parameters.light_max / 2;
+			light_value_A = parameters.light_max_A / 2;
+
+		// TODO could be refactored more elegantly and with a smoother gradient
+		light_value_B = parameters.light_max_B;
+		if (current_time.Hour - parameters.hour_dawn == 0)
+			light_value_B = parameters.light_max_B / 3;
+		else if (current_time.Hour - parameters.hour_dusk == 1)
+			light_value_B = parameters.light_max_B / 2;
+
+		if (parameters.hour_dawn - current_time.Hour == 0)
+			light_value_B = parameters.light_max_B / 3;
+		else if (parameters.hour_dusk - current_time.Hour == 1)
+			light_value_B = parameters.light_max_B / 2;
 	}
 
-	ChangeLight(light_value, 1500);
+	ChangeLight(light_value_A, light_value_B, 1500);
 }
 
 void Application::Heating()
@@ -214,24 +227,32 @@ void Application::Heating()
 	if (temperature == -1)
 	{
 		// Do not turn on the heating if the thermometer is not working
-		SendAction(PWMC_C, 0, 1000);
+		StopHeating();
 		return;
 	}
 
+
+	uint8_t pourcentage_chauffage = DataSaveLoad::ReadCurrentHeatingPercentage();
+	
 	if (IsDay())
 	{
 		if (temperature < parameters.temperature_day)
-			SendAction(PWMC_C, MAX_PERCENTAGE_HEATER, 1000);
+			SendAction(PWMC_C, pourcentage_chauffage, 1000);
 		else
-			SendAction(PWMC_C, 0, 1000);
+			StopHeating();
 	}
 	else
 	{
 		if (temperature < parameters.temperature_night)
-			SendAction(PWMC_C, MAX_PERCENTAGE_HEATER, 0);
+			SendAction(PWMC_C, pourcentage_chauffage, 0);
 		else
-			SendAction(PWMC_C, 0, 1000);
+			StopHeating();
 	}
+}
+
+void	Application::StopHeating()
+{
+	SendAction(PWMC_C, 0, 1000);
 }
 
 void	Application::Pump()
@@ -240,6 +261,12 @@ void	Application::Pump()
 	uint8_t			cycle_delay;
 	float			cycle_time_minutes;
 	uint8_t			cycle_current_minute;
+
+	if (parameters.pump_cycles_per_hour == 0)
+	{
+		ChangePump(0, 600);
+		return;
+	}
 
 	time = TimeSystem::GetTime();
 	cycle_delay = 60 / parameters.pump_cycles_per_hour;
@@ -302,17 +329,19 @@ void Application::PlayMelody(Melodies melody)
 	xQueueSend(audioQueue, &melody, 0);
 }
 
-void	Application::ChangeLight(uint8_t percentage, uint32_t fade_time)
+void	Application::ChangeLight(uint8_t percentage_A, uint8_t percentage_C, uint32_t fade_time)
 {
-	if (percentage > 100)
-		percentage = 100;
+	if (percentage_A > 100)
+		percentage_A = 100;
+	if (percentage_C > 100)
+		percentage_C = 100;
 
-	if (m_current_light_level != percentage)
+	if (m_current_light_level != percentage_A)
 	{
-		SendAction(PWMC_A, percentage, fade_time);	// Warm White LED
-		SendAction(PWMC_B, percentage * 0.7f, fade_time); // Red LED (heats more -> decrease pwm)
+		SendAction(PWMC_A, percentage_A, fade_time);	// Warm White LED
+		SendAction(PWMC_B, percentage_C, fade_time);	// Red LED (heats more -> decrease pwm)
 	}
-	m_current_light_level = percentage;
+	m_current_light_level = percentage_A;
 }
 
 void	Application::ChangePump(uint8_t percentage, uint32_t fade_time)

@@ -18,7 +18,7 @@ void		ThermometerTask(void *parameter)
 {
 	QueueHandle_t	temperatureQueue = Application::singleton->temperatureQueue;
 	QueueHandle_t	TSensorActiveQueue = Application::singleton->TSensorActiveQueue;
-	Thermometer		thermometer;
+	DS18B20Sensor	DS18B20Temp;
 
 	// we should fill the queue with at least an error value. Not the undefined default
 	float init_temp = -1;
@@ -28,8 +28,12 @@ void		ThermometerTask(void *parameter)
 	delay(1000);
 
 	// Start the thermometer and try again if there is an error
-	while (!thermometer.StartDevice())
+	for (size_t i = 0; i < 10; i++)
+	{
+		if(DS18B20Temp.StartDevice())
+			break;
 		delay(400);
+	}
 
 	// Wait a bit between initialization and first reading
 	delay(5000);
@@ -45,9 +49,9 @@ void		ThermometerTask(void *parameter)
 		if (canCheckTemperature)
 		{
 			// Check Temperature
-			tempC = thermometer.GetTemperature();
+			tempC = DS18B20Temp.GetTemperature();
 			if (tempC == -1)
-				thermometer.StartDevice();
+				DS18B20Temp.StartDevice();
 
 			if (tempC < -1)
 				tempC = -1; // sometime gets -127 for some reason
@@ -64,12 +68,21 @@ void		ThermometerTask(void *parameter)
 
 Thermometer::Thermometer()
 {
+
+}
+
+// ------------------------------
+// ---------- DS18B20 -----------
+// ------------------------------
+
+DS18B20Sensor::DS18B20Sensor()
+{
 	oneWire = OneWire(PIN_DS18B20);
 	delay(200);
 	DS18B20 = DallasTemperature(&oneWire);
 }
 
-bool		Thermometer::StartDevice()
+bool		DS18B20Sensor::StartDevice()
 {
 	DS18B20.begin();
 	delay(500);
@@ -78,11 +91,11 @@ bool		Thermometer::StartDevice()
 		Serial.printf("error in starting up DS18B20..\n");
 		return (false);
 	}
-	Serial.printf("=> DS18B20 started OK !\n");
+	Serial.printf("=> DS18B20 started OK ! Adress: %u\n", adress);
 	return (true);
 }
 
-float		Thermometer::GetTemperature()
+float		DS18B20Sensor::GetTemperature()
 {
 	if (DS18B20.requestTemperaturesByAddress(adress))
 	{
@@ -94,3 +107,38 @@ float		Thermometer::GetTemperature()
 	Serial.printf("Error getting adress temperature...\n");
 	return (-1);
 }
+
+// ------------------------------
+// ---------- AM2302 ------------
+// ------------------------------
+/*
+AM2302Sensor::AM2302Sensor() : DHTSensor(PIN_DS18B20, DHT22)
+{
+
+}
+
+bool		AM2302Sensor::StartDevice()
+{
+	DHTSensor.begin();
+	delay(3000);
+	if (isnan(DHTSensor.readTemperature()))
+	{
+		Serial.printf("error in starting up AM2302..\n");
+		return (false);
+	}
+	Serial.printf("=> AM2302 started OK !\n");
+	return (true);
+}
+
+float		AM2302Sensor::GetTemperature()
+{
+	float tempC = DHTSensor.readTemperature();
+	if(!isnan(tempC))
+	{
+		Serial.printf("AM2302 Value : %0.2f\n", tempC);
+		return (tempC);
+	}
+	Serial.printf("Error reading AM2302...\n");
+	return (-1);
+}
+*/

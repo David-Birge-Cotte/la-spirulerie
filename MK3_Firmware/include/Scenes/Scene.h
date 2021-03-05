@@ -3,6 +3,7 @@
 
 #include "DataTypes.h"
 #include "GraphicsEngine/GraphicsEngine.h"
+#include "GraphicsEngine/Elements.h"
 
 // forward declaration. Need including App.h in each scene .c files
 class	Application;

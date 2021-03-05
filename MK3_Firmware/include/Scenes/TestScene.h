@@ -11,6 +11,9 @@ class	TestScene : public Scene
 	void Draw(GraphicsEngine *graphics) override;
 	void OnButtonClic(BTN btn) override;
 	void Destroy() override;
+
+	private:
+		PopUp	popup;
 };
 
 #endif

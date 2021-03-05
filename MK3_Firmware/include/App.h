@@ -21,6 +21,7 @@
 #include "GraphicsEngine/GraphicsEngine.h"
 #include "GraphicsEngine/SimplexNoise.h"
 #include "GraphicsEngine/SpriteArrays.h"
+#include "GraphicsEngine/Elements.h"
 
 #include "Scenes/Scene.h"
 #include "Scenes/SceneMainMenu.h"
@@ -34,6 +35,7 @@
 #include "Scenes/SceneThermometerCalibration.h"
 #include "Scenes/SceneHeatingSettings.h"
 #include "Scenes/SceneScreenSaverSettings.h"
+#include "Scenes/TestScene.h"
 
 // Commenting options
 #define	SERIAL_DEBUG // TODO faudrait l'implémenter car les serial debug sont par default partout...
@@ -96,7 +98,7 @@ class Application
 		// Intertask communication
 		void	SendAction(uint8_t PWMChannel, float percentage, uint32_t fadetime);
 		void	PlayMelody(Melodies melody);
-		void	ChangeLight(uint8_t percentage, uint32_t fade_time);
+		void	ChangeLight(uint8_t percentage_A, uint8_t percentage_C, uint32_t fade_time);
 		void	ChangePump(uint8_t percentage, uint32_t fadetime);
 
 	// *** PRIVATE METHODS ***
@@ -105,6 +107,7 @@ class Application
 		void	Lighting();
 		void	Heating();
 		void	Pump();
+		void	StopHeating();
 
 		// Booleans test
 		bool	IsDay();

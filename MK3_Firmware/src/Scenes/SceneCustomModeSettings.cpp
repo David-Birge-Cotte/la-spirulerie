@@ -1,7 +1,7 @@
 #include "Scenes/SceneCustomModeSettings.h"
 #include "App.h"
 
-enum PARAMS { LUMIERE_MAX, HOUR_START, HOUR_END, T_DAY, T_NIGHT, PUMP_CYCLE_PER_HOUR, PUMP_CYCLE_LENGHT };
+enum PARAMS { LUMIERE_MAX_A, LUMIERE_MAX_B, HOUR_START, HOUR_END, T_DAY, T_NIGHT, PUMP_CYCLE_PER_HOUR, PUMP_CYCLE_LENGHT };
 
 void	SceneCustomModeSettings::Initialize()
 {
@@ -9,7 +9,7 @@ void	SceneCustomModeSettings::Initialize()
 	Scene::Initialize();
 
 	m_custom_mode = DataSaveLoad::ReadCustomMode();
-	m_selection = (float)(100.0f / MAX_PERCENTAGE_LIGHT) * m_custom_mode.light_max;
+	m_selection = (float)(100.0f / MAX_PERCENTAGE_LIGHT) * m_custom_mode.light_max_A;
 
 	app->Graphics.LoadFont("Comfortaa_16", SPIRULERIE_BLUE, SPIRULERIE_LIGHT);
 	app->Graphics.Screen.setTextDatum(TC_DATUM);
@@ -21,13 +21,23 @@ void	SceneCustomModeSettings::Update()
 
 	switch (m_progress)
 	{
-	case PARAMS::LUMIERE_MAX:
+	case PARAMS::LUMIERE_MAX_A:
 		if (m_selection > 100)
 			m_selection = 0;
 		if (m_selection < 0)
 			m_selection = 100;
 
-		m_title_text = TextContent::text_custom_mode_title_light_FR;
+		m_title_text = TextContent::text_custom_mode_title_light_A_FR;
+		m_helper_text = TextContent::text_custom_mode_light_max_FR;
+		m_selection_text = (String)m_selection + " %";
+		break;
+	case PARAMS::LUMIERE_MAX_B:
+		if (m_selection > 100)
+			m_selection = 0;
+		if (m_selection < 0)
+			m_selection = 100;
+
+		m_title_text = TextContent::text_custom_mode_title_light_B_FR;
 		m_helper_text = TextContent::text_custom_mode_light_max_FR;
 		m_selection_text = (String)m_selection + " %";
 		break;
@@ -132,9 +142,14 @@ void	SceneCustomModeSettings::OnButtonClic(BTN btn)
 	case BTN::MIDDLE:
 		// get to next option
 		m_progress++;
-		if (m_progress == PARAMS::HOUR_START)
+		if (m_progress == PARAMS::LUMIERE_MAX_B)
 		{
-			m_custom_mode.light_max = m_selection*MAX_PERCENTAGE_LIGHT/100;
+			m_custom_mode.light_max_A = m_selection*MAX_PERCENTAGE_LIGHT/100;
+			m_selection = (float)(100.0f / MAX_PERCENTAGE_LIGHT) * m_custom_mode.light_max_B;
+		}	
+		else if (m_progress == PARAMS::HOUR_START)
+		{
+			m_custom_mode.light_max_B = m_selection*MAX_PERCENTAGE_LIGHT/100;
 			m_selection = m_custom_mode.hour_dawn;
 		}	
 		else if (m_progress == PARAMS::HOUR_END)

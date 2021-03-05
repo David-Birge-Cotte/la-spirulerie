@@ -24,21 +24,17 @@ void SceneMainMenu::Draw(GraphicsEngine *graphics)
 	// clear screen
 	graphics->DrawScreen(SPIRULERIE_GREY);
 
-	// Show the time
+	// draw sky and sun / stars
 	DrawDayNightCycle(hour(), app->parameters.hour_dawn, app->parameters.hour_dusk);
-	
-	// Render a separator
-	//graphics->Screen.drawFastHLine(32, 64, 96, SPIRULERIE_LIGHT);
-	
+	// draw green bottom half
 	graphics->Screen.fillRect(0, 64, 160, 64, SPIRULERIE_GREEN);
-
-	// Show the current temperature
+	// show the current temperature
 	DrawTemperature(24, 80, app->GetCurrentTemperature());
 
 	//if (app->heatNominal)
 	//	graphics->DrawImage(Sprites::chauffage_32_32, 18, 80, 32, 32); // trop moche
 
-	// draw possible moves out of screen
+	// draw possible moves out of the screen
 	graphics->DrawRightArrow();
 
 	Scene::Draw(graphics);
@@ -49,7 +45,7 @@ void SceneMainMenu::OnButtonClic(BTN btn)
 	switch (btn)
 	{
 	case BTN::LEFT:
-		//app->LoadScene(new SceneLoadingScreen());
+		//app->LoadScene(new TestScene());
 		break;
 	case BTN::MIDDLE:
 		break;
@@ -71,9 +67,10 @@ void SceneMainMenu::Destroy()
 
 void	SceneMainMenu::DrawDayNightCycle(uint8_t hour, uint8_t dawn, uint8_t dusk)
 {
-	// check boundaries
+	// check if night
 	if (hour < dawn || hour >= dusk)
 	{
+		// draw the night sky
 		app->Graphics.Screen.fillRect(0, 0, 160, 64, SPIRULERIE_GREY);
 		for (int i = 0; i < 32; i++)
 		{
@@ -84,11 +81,13 @@ void	SceneMainMenu::DrawDayNightCycle(uint8_t hour, uint8_t dawn, uint8_t dusk)
 			x = (x + 1) / 2.0f * 160.0f;
 			y = (y + 1) / 2.0f * 64.0f;
 
+			// draw a star
 			app->Graphics.Screen.drawPixel(x, y, SPIRULERIE_LIGHT);
 		}
 		return;
 	}
 
+	// draw blue sky
 	app->Graphics.Screen.fillRect(0, 0, 160, 64, SPIRULERIE_BLUE);
 
 	uint8_t	num_day_hours = dusk - dawn;

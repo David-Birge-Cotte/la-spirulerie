@@ -9,6 +9,14 @@ void TestScene::Initialize()
 {
 	Serial.printf("<== scene TestScene ==>\n");
 	Scene::Initialize();
+
+	popup.Initialize();
+	popup.Line1 = "Title!";
+	popup.Line2 = "ceci est popup !";
+	popup.Line3 = "ligne 3";
+	popup.Line4 = "[OK]";
+
+	app->Graphics.LoadFont("Comfortaa_16", SPIRULERIE_GREY, SPIRULERIE_LIGHT);
 }
 
 void TestScene::Update()
@@ -18,14 +26,14 @@ void TestScene::Update()
 
 	pos.X = (WIN_WIDTH / 2) + noisyX - 8;
 	pos.Y = (WIN_HEIGHT / 2) + noisyY - 8;
-	
+
+	popup.Update();
 	Scene::Update();
 }
 
 void TestScene::Draw(GraphicsEngine *graphics)
 {
 	graphics->DrawScreen(SPIRULERIE_LIGHT);
-	//graphics->Screen.fillRoundRect(pos.X, pos.Y, 16, 16, 8, SPIRULERIE_GREEN);
 
 	float current_millis = millis() / 2000.0f;
 	int x = 5;
@@ -41,14 +49,19 @@ void TestScene::Draw(GraphicsEngine *graphics)
 
 	static int y = 0;
 	y--;
-	//graphics->DrawImage(pixel_noir, 0, y, 450, 510);
 
+
+	popup.Draw(graphics);
 	Scene::Draw(graphics);
 }
 
 void TestScene::OnButtonClic(BTN btn)
 {
-	Application::singleton->LoadScene(new SceneMainMenu());
+	if (popup.IsShowned())
+		popup.Hide();
+	else
+		popup.Show(true);
+
 	Scene::OnButtonClic(btn);
 }
 

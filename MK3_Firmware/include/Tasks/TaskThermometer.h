@@ -5,23 +5,45 @@
 #include <Spirulerie.h>
 
 #include "App.h"
+//#include "Adafruit_Sensor.h"
+//#include "DHT.h"
 
 #define READING_DELAY	3000 //30000
 
-// Global Variables
 class Thermometer
 {
-	public:
-		// Members
+	public:	
+		// Methods
+		Thermometer();
+		virtual bool		StartDevice();
+		virtual float		GetTemperature();
+};
+
+class DS18B20Sensor : Thermometer
+{
+	protected:
 		OneWire				oneWire;
 		DallasTemperature	DS18B20;
 		DeviceAddress		adress;
-		
-		// Methods
-		Thermometer();
-		bool				StartDevice();
-		float				GetTemperature();
+
+	public:	
+		DS18B20Sensor();
+		bool  			StartDevice() override;
+		float			GetTemperature() override;
 };
+
+/*
+class AM2302Sensor : Thermometer
+{
+	protected:
+		DHT				DHTSensor;
+
+	public:	
+		AM2302Sensor();
+		bool  			StartDevice() override;
+		float			GetTemperature() override;
+};
+*/
 
 // Functions
 TaskHandle_t	InitThermometer(); // entry point

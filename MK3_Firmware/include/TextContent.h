@@ -55,7 +55,8 @@ namespace TextContent
 	const char	text_mode_custom_FR[] PROGMEM = "personnalisé";
 
 	// **** MODE CUSTOMISATION
-	const char	text_custom_mode_title_light_FR[] PROGMEM = "lumière";
+	const char	text_custom_mode_title_light_A_FR[] PROGMEM = "lumière 1";
+	const char	text_custom_mode_title_light_B_FR[] PROGMEM = "lumière 2";
 	const char	text_custom_mode_title_day_FR[] PROGMEM = "journée";
 	const char	text_custom_mode_title_temperature_FR[] PROGMEM = "température";
 	const char	text_custom_mode_title_pump_FR[] PROGMEM = "pompe";
