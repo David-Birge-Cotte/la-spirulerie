@@ -98,7 +98,7 @@ class Application
 		// Intertask communication
 		void	SendAction(uint8_t PWMChannel, float percentage, uint32_t fadetime);
 		void	PlayMelody(Melodies melody);
-		void	ChangeLight(uint8_t percentage_A, uint8_t percentage_C, uint32_t fade_time);
+		void	ChangeLight(uint8_t percentage_A, uint8_t percentage_B, uint32_t fade_time);
 		void	ChangePump(uint8_t percentage, uint32_t fadetime);
 
 	// *** PRIVATE METHODS ***

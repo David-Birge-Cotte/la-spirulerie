@@ -17,7 +17,7 @@ struct ModeParameters
 {
 	// Lighting data
 	uint8_t	light_max_A;	// max day light in percentage 0-100% (channel A)
-	uint8_t	light_max_B;	// max day light for channel C
+	uint8_t	light_max_B;	// max day light for channel B
 
 	uint8_t	hour_dusk;	// hour at which the day starts
 	uint8_t	hour_dawn;	// hour at which the night starts
@@ -31,7 +31,7 @@ struct ModeParameters
 	uint8_t	pump_cycle_lenght; // MAXIMUM 120 (in seconds)
 
 	ModeParameters();
-	ModeParameters(uint8_t	light_max_A, uint8_t light_max_C, uint8_t	hour_dusk, uint8_t	hour_dawn, 
+	ModeParameters(uint8_t	light_max_A, uint8_t light_max_B, uint8_t	hour_dusk, uint8_t	hour_dawn, 
 			uint8_t	temperature_day, uint8_t	temperature_night,
 			uint8_t	pump_cycles_per_hour, uint8_t	pump_cycle_lenght);
 };
