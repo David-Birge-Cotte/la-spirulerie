@@ -108,7 +108,7 @@ void	SceneMainMenu::DrawTemperature(uint16_t x, uint16_t y, float temperature)
 	app->Graphics.DrawImage(Sprites::thermometer_32x32, x, y, 32, 32);
 
 	app->Graphics.Screen.setCursor(x + 26, y + 6);
-	if (temperature - DataSaveLoad::ReadThermometerAdjustement() != -1)
+	if (temperature != -1)
 		app->Graphics.Screen.printf("%.1f°C", temperature);
 	else
 		app->Graphics.Screen.printf(". . . . °C");

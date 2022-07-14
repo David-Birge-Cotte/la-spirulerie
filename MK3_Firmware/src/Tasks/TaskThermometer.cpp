@@ -53,7 +53,7 @@ void		ThermometerTask(void *parameter)
 			if (tempC == -1)
 				DS18B20Temp.StartDevice();
 
-			if (tempC < -1)
+			if (tempC < -1 || tempC == 85) //85°C is VCC disconnected
 				tempC = -1; // sometime gets -127 for some reason
 
 			// Send temperature to Queue

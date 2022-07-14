@@ -206,10 +206,11 @@ void Application::Lighting()
 
 void Application::Heating()
 {
-	float temperature = GetCurrentTemperature();
+	float temperature;
+	xQueuePeek(temperatureQueue, &temperature, 0);
 
-	static uint64_t first_try = 0;
-	if (temperature == -1) // if there is a problem with the temperature
+	static unsigned long first_try = 0;
+	if (temperature <= -1) // if there is a problem with the temperature
 	{
 		// stores the timing of the first reading problem
 		if (first_try == 0)
