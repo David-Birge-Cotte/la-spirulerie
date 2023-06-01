@@ -1,6 +1,6 @@
 # la-spirulerie
 
-www.la-spirulerie.co/
+www.la-spirulerie.com/
 
 ------------------------------------------------------------
 
